@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瀚界科技风电大模型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1466611653911-95081537e5b7') center/cover;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .parallax-header {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .layer-1 {
+            z-index: 1;
+            background: url('https://images.unsplash.com/photo-1466611653911-95081537e5b7') center/cover;
+            filter: brightness(0.7);
+        }
+
+        .layer-2 {
+            z-index: 2;
+            background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 1));
+            transform: translateY(30%);
+        }
+
+        .layer-3 {
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .title-container {
+            position: relative;
+            z-index: 4;
+            text-align: center;
+            color: white;
+            transform: translateY(50%);
+            opacity: 0;
+            animation: fadeInUp 1s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.47);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .nav-items {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-items:hover, .nav-items.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 5;
+            margin-top: -20vh;
+            padding-bottom: 4rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            z-index: 5;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        #message {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e2e8f0;
+        }
+
+        #message::placeholder {
+            color: #94a3b8;
+        }
+
+        #response {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e2e8f0;
+        }
+
+        .markdown-body {
+            color: #e2e8f0 !important;
+            background-color: transparent !important;
+        }
+
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+
+        .image-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 0.5));
+        }
+
+        .image-container img {
+            transition: transform 0.5s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a class="nav-items active">首页</a>
+        <a class="nav-items">关于我们</a>
+        <a class="nav-items">技术优势</a>
+        <a class="nav-items">案例展示</a>
+        <a class="nav-items">联系方式</a>
+    </nav>
+
+    <div class="parallax-header">
+        <div class="parallax-layer layer-1"></div>
+        <div class="parallax-layer layer-2"></div>
+        <div class="parallax-layer layer-3"></div>
+
+        <div class="title-container">
+            <h3 class="text-2xl mb-4 font-light">智能风电解决方案</h3>
+            <h1 class="text-6xl font-bold mb-6">瀚界科技</h1>
+            <p class="text-xl">引领风电产业智能化革新</p>
+        </div>
+
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="container mx-auto px-4 py-6">
+            <!-- 对话区域 -->
+            <div class="glass-card rounded-2xl shadow-2xl p-6 mb-8">
+                <div class="max-w-4xl mx-auto">
+                    <!-- 对话区域 -->
+                    <div class="space-y-6">
+                        <div>
+                            <label for="message" class="block text-lg font-semibold text-gray-200">
+                                <span class="flex items-center gap-2">
+                                    <i class="fas fa-comments text-blue-400"></i>
+                                    请输入您的问题
+                                </span>
+                            </label>
+                            <textarea
+                                id="message"
+                                class="w-full px-4 py-3 mt-2 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all duration-300 resize-none"
+                                rows="3"
+                                placeholder="请输入您想询问的问题..."
+                            >什么是风力发电？</textarea>
+                        </div>
+
+                        <!-- 发送按钮 -->
+                        <button
+                            onclick="sendMessage()"
+                            class="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-900 transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
+                        >
+                            <i class="fas fa-paper-plane"></i>
+                            发送问题
+                        </button>
+
+                        <!-- 响应区域 -->
+                        <div>
+                            <label class="block text-lg font-semibold text-gray-200">
+                                <span class="flex items-center gap-2">
+                                    <i class="fas fa-robot text-blue-400"></i>
+                                    AI 助手回复
+                                </span>
+                            </label>
+                            <div id="response" class="mt-2 p-4 rounded-xl min-h-[200px] markdown-body"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <!-- 项目展示区域 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- 第一列 -->
+                    <div class="glass-card rounded-xl p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">
+                            <i class="fas fa-project-diagram mr-2 text-blue-400"></i>
+                            风电运维助手
+                        </h3>
+                        <div class="image-container">
+                            <img src="核心技术3.png" alt="项目1" class="w-full h-48 object-cover rounded-lg" />
+                            <p class="text-sm text-gray-300 mt-2 text-center">致力于让每一位现场运维人员拥有行业前10%运维专家能力
+</p>
+                        </div>
+                    </div>
+
+                    <!-- 第二列 -->
+                    <div class="glass-card rounded-xl p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">
+                            <i class="fas fa-project-diagram mr-2 text-blue-400"></i>
+                            故障预警系统
+                        </h3>
+                        <div class="image-container">
+                            <img src="核心技术2.png" alt="项目2" class="w-full h-48 object-cover rounded-lg" />
+                            <p class="text-sm text-gray-300 mt-2 text-center">智能手段助力“早发现、早预警、早处理”最大化降低风电机组故障率和运维成本
+</p>
+                        </div>
+                    </div>
+
+                    <!-- 第三列 -->
+                    <div class="glass-card rounded-xl p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">
+                            <i class="fas fa-chart-line mr-2 text-blue-400"></i>
+                            技术优势
+                        </h3>
+                        <div class="image-container">
+                            <img src="核心技术1.png" alt="技术优势" class="w-full h-48 object-cover rounded-lg" />
+                            <p class="text-sm text-gray-300 mt-2 text-center">因果概率大模型</p>
+                        </div>
+                    </div>
+                </div>
+            <!-- 页脚 -->
+            <div class="text-center mt-6 text-gray-400 text-sm">
+                © 2025 瀚界科技 · 专业风电智能解决方案
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 视差滚动效果
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxLayers = document.querySelectorAll('.parallax-layer');
+
+            parallaxLayers.forEach((layer, index) => {
+                const speed = (index + 1) * 0.5;
+                const yPos = -(scrolled * speed);
+                layer.style.transform = `translateY(${yPos}px)`;
+            });
+        });
+
+        // Marked配置和消息发送功能
+        marked.setOptions({
+            renderer: new marked.Renderer(),
+            highlight: function(code, lang) {
+                return code;
+            },
+            pedantic: false,
+            gfm: true,
+            breaks: true,
+            sanitize: false,
+            smartypants: false,
+            xhtml: false
+        });
+
+        async function sendMessage() {
+            const messageEl = document.getElementById('message');
+            const responseEl = document.getElementById('response');
+
+            const url = 'https://44cf8be8.r16.cpolar.top/api/v1/workspace/hantech/chat';
+            const headers = {
+                'accept': 'application/json',
+                'Authorization': 'Bearer 0V37RD6-X3Q4PY5-PPJCQHX-K5W2ATQ',
+                'Content-Type': 'application/json'
+            };
+            const data = {
+                message: messageEl.value,
+                mode: 'chat'
+            };
+
+            try {
+                responseEl.innerHTML = '<div class="flex items-center gap-2"><div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>正在思考中...</div>';
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                typeWriter(responseEl, result.textResponse || '未找到回复内容');
+            } catch (error) {
+                responseEl.textContent = '发生错误：' + error.message;
+            }
+        }
+
+        function typeWriter(element, text, speed = 30) {
+            let i = 0;
+            let buffer = '';
+            element.innerHTML = '';
+
+            function type() {
+                if (i < text.length) {
+                    buffer += text.charAt(i);
+                    element.innerHTML = marked.parse(buffer);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+    </script>
+</body>
+</html>
