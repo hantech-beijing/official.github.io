@@ -234,6 +234,31 @@
             from { opacity: 0; }  
             to { opacity: 1; }  
         }  
+        
+        .about-image-container {  
+            position: relative;  
+            max-width: 90%;  
+            margin: 0 auto;  
+            overflow: hidden;  
+            border-radius: 1rem;  
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);  
+            transition: transform 0.3s ease, box-shadow 0.3s ease;  
+        }  
+        
+        .about-image-container:hover {  
+            transform: scale(1.02);  
+            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.7);  
+        }  
+        
+        .about-image {  
+            width: 100%;  
+            display: block;  
+            transition: transform 0.5s ease;  
+        }  
+        
+        .about-image-container:hover .about-image {  
+            transform: scale(1.05);  
+        }  
     </style>  
 </head>  
 <body>  
@@ -407,10 +432,15 @@
         <div class="pt-20 min-h-screen">  
             <div class="container mx-auto px-4 py-6">  
                 <h1 class="text-4xl font-bold text-center mb-8 text-blue-400">关于我们</h1>  
-                <div class="glass-card rounded-xl p-6 max-w-4xl mx-auto">  
-                    <p class="text-gray-300 mb-4">瀚界科技是一家专注于风电智能化解决方案的高科技企业，致力于将先进的人工智能技术应用于风电领域，提高风电场的运行效率和降低维护成本。</p>  
-                    <p class="text-gray-300 mb-4">我们的团队由风电领域专家和AI技术人才组成，拥有丰富的行业经验和技术积累。</p>  
-                    <p class="text-gray-300">我们的使命是：通过技术创新推动风电产业智能化升级，助力清洁能源更高效、更可靠地发展。</p>  
+                
+                <!-- 关于我们图片容器 -->  
+                <div class="about-image-container">  
+                    <img src="瀚界介绍.png" alt="瀚界科技介绍" class="about-image">  
+                </div>  
+                
+                <!-- 可以添加一些简短的描述或版权信息 -->  
+                <div class="text-center mt-8 text-gray-400 text-sm">  
+                    © 2025 瀚界科技 - 智慧风电解决方案  
                 </div>  
             </div>  
         </div>  
