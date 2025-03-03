@@ -1,403 +1,538 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>瀚界科技风电大模型</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.css">
-    <style>
-        :root {
-            --primary-color: #2563eb;
-        }
+<!DOCTYPE html>  
+<html lang="zh">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>瀚界科技风电大模型</title>  
+    <script src="https://cdn.tailwindcss.com"></script>  
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.css">  
+    <style>  
+        :root {  
+            --primary-color: #2563eb;  
+        }  
 
-        body {
-            background-color: #0f172a;
-            color: #e2e8f0;
-            min-height: 100vh;
-        }
+        body {  
+            background-color: #0f172a;  
+            color: #e2e8f0;  
+            min-height: 100vh;  
+        }  
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://images.unsplash.com/photo-1466611653911-95081537e5b7') center/cover;
-            opacity: 0.2;
-            pointer-events: none;
-            z-index: -1;
-        }
+        body::before {  
+            content: '';  
+            position: fixed;  
+            top: 0;  
+            left: 0;  
+            width: 100%;  
+            height: 100%;  
+            background: url('https://images.unsplash.com/photo-1466611653911-95081537e5b7') center/cover;  
+            opacity: 0.2;  
+            pointer-events: none;  
+            z-index: -1;  
+        }  
 
-        .parallax-header {
-            position: relative;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        .parallax-header {  
+            position: relative;  
+            height: 100vh;  
+            overflow: hidden;  
+            display: flex;  
+            justify-content: center;  
+            align-items: center;  
+        }  
 
-        .parallax-layer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .parallax-layer {  
+            position: absolute;  
+            width: 100%;  
+            height: 100%;  
+            object-fit: cover;  
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);  
+        }  
 
-        .layer-1 {
-            z-index: 1;
-            background: url('https://images.unsplash.com/photo-1466611653911-95081537e5b7') center/cover;
-            filter: brightness(0.7);
-        }
+        .layer-1 {  
+            z-index: 1;  
+            background: url('https://images.unsplash.com/photo-1466611653911-95081537e5b7') center/cover;  
+            filter: brightness(0.7);  
+        }  
 
-        .layer-2 {
-            z-index: 2;
-            background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 1));
-            transform: translateY(30%);
-        }
+        .layer-2 {  
+            z-index: 2;  
+            background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 1));  
+            transform: translateY(30%);  
+        }  
 
-        .layer-3 {
-            z-index: 3;
-            pointer-events: none;
-        }
+        .layer-3 {  
+            z-index: 3;  
+            pointer-events: none;  
+        }  
 
-        .title-container {
-            position: relative;
-            z-index: 4;
-            text-align: center;
-            color: white;
-            transform: translateY(50%);
-            opacity: 0;
-            animation: fadeInUp 1s forwards;
-        }
+        .title-container {  
+            position: relative;  
+            z-index: 4;  
+            text-align: center;  
+            color: white;  
+            transform: translateY(50%);  
+            opacity: 0;  
+            animation: fadeInUp 1s forwards;  
+        }  
 
-        @keyframes fadeInUp {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+        @keyframes fadeInUp {  
+            to {  
+                transform: translateY(0);  
+                opacity: 1;  
+            }  
+        }  
 
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        }
+        .glass-effect {  
+            background: rgba(255, 255, 255, 0.1);  
+            backdrop-filter: blur(10px);  
+            border: 1px solid rgba(255, 255, 255, 0.1);  
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);  
+        }  
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            transition: all 0.3s ease;
-        }
+        .glass-card {  
+            background: rgba(255, 255, 255, 0.1);  
+            backdrop-filter: blur(10px);  
+            border: 1px solid rgba(255, 255, 255, 0.1);  
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);  
+            transition: all 0.3s ease;  
+        }  
 
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.47);
-        }
+        .glass-card:hover {  
+            transform: translateY(-5px);  
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.47);  
+        }  
 
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 1rem;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-        }
+        nav {  
+            position: fixed;  
+            top: 0;  
+            left: 0;  
+            width: 100%;  
+            z-index: 1000;  
+            background: rgba(15, 23, 42, 0.8);  
+            backdrop-filter: blur(10px);  
+            padding: 1rem;  
+            display: flex;  
+            justify-content: center;  
+            gap: 2rem;  
+        }  
 
-        .nav-items {
-            color: #e2e8f0;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
+        .nav-items {  
+            color: #e2e8f0;  
+            text-decoration: none;  
+            font-weight: 500;  
+            padding: 0.5rem 1rem;  
+            border-radius: 0.5rem;  
+            transition: all 0.3s ease;  
+            cursor: pointer;  
+        }  
 
-        .nav-items:hover, .nav-items.active {
-            background: var(--primary-color);
-            color: white;
-        }
+        .nav-items:hover, .nav-items.active {  
+            background: var(--primary-color);  
+            color: white;  
+        }  
 
-        .content-wrapper {
-            position: relative;
-            z-index: 5;
-            margin-top: -20vh;
-            padding-bottom: 4rem;
-        }
+        .content-wrapper {  
+            position: relative;  
+            z-index: 5;  
+            margin-top: -20vh;  
+            padding-bottom: 4rem;  
+        }  
 
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 2rem;
-            animation: bounce 2s infinite;
-            z-index: 5;
-        }
+        .scroll-indicator {  
+            position: absolute;  
+            bottom: 2rem;  
+            left: 50%;  
+            transform: translateX(-50%);  
+            color: white;  
+            font-size: 2rem;  
+            animation: bounce 2s infinite;  
+            z-index: 5;  
+        }  
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-30px);
-            }
-            60% {
-                transform: translateY(-15px);
-            }
-        }
+        @keyframes bounce {  
+            0%, 20%, 50%, 80%, 100% {  
+                transform: translateY(0);  
+            }  
+            40% {  
+                transform: translateY(-30px);  
+            }  
+            60% {  
+                transform: translateY(-15px);  
+            }  
+        }  
 
-        #message {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #e2e8f0;
-        }
+        #message {  
+            background: rgba(255, 255, 255, 0.1);  
+            border: 1px solid rgba(255, 255, 255, 0.2);  
+            color: #e2e8f0;  
+        }  
 
-        #message::placeholder {
-            color: #94a3b8;
-        }
+        #message::placeholder {  
+            color: #94a3b8;  
+        }  
 
-        #response {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #e2e8f0;
-        }
+        #response {  
+            background: rgba(255, 255, 255, 0.1);  
+            border: 1px solid rgba(255, 255, 255, 0.2);  
+            color: #e2e8f0;  
+        }  
 
-        .markdown-body {
-            color: #e2e8f0 !important;
-            background-color: transparent !important;
-        }
+        .markdown-body {  
+            color: #e2e8f0 !important;  
+            background-color: transparent !important;  
+        }  
 
-        .image-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 0.5rem;
-        }
+        .image-container {  
+            position: relative;  
+            overflow: hidden;  
+            border-radius: 0.5rem;  
+        }  
 
-        .image-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 0.5));
-        }
+        .image-container::after {  
+            content: '';  
+            position: absolute;  
+            top: 0;  
+            left: 0;  
+            width: 100%;  
+            height: 100%;  
+            background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 0.5));  
+        }  
 
-        .image-container img {
-            transition: transform 0.5s ease;
-        }
+        .image-container img {  
+            transition: transform 0.5s ease;  
+        }  
 
-        .image-container:hover img {
-            transform: scale(1.1);
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <a class="nav-items active">首页</a>
-        <a class="nav-items">关于我们</a>
-        <a class="nav-items">技术优势</a>
-        <a class="nav-items">案例展示</a>
-        <a class="nav-items">联系方式</a>
-    </nav>
+        .image-container:hover img {  
+            transform: scale(1.1);  
+        }  
+        
+        .loading {  
+            display: inline-block;  
+            width: 20px;  
+            height: 20px;  
+            border: 3px solid rgba(255,255,255,.3);  
+            border-radius: 50%;  
+            border-top-color: #fff;  
+            animation: spin 1s ease-in-out infinite;  
+        }  
 
-    <div class="parallax-header">
-        <div class="parallax-layer layer-1"></div>
-        <div class="parallax-layer layer-2"></div>
-        <div class="parallax-layer layer-3"></div>
+        @keyframes spin {  
+            to { transform: rotate(360deg); }  
+        }  
+    </style>  
+</head>  
+<body>  
+    <nav>  
+        <a class="nav-items active">首页</a>  
+        <a class="nav-items">关于我们</a>  
+        <a class="nav-items">技术优势</a>  
+        <a class="nav-items">案例展示</a>  
+        <a class="nav-items">联系方式</a>  
+    </nav>  
 
-        <div class="title-container">
-            <h3 class="text-2xl mb-4 font-light">智能风电解决方案</h3>
-            <h1 class="text-6xl font-bold mb-6">瀚界科技</h1>
-            <p class="text-xl">引领风电产业智能化革新</p>
-        </div>
+    <div class="parallax-header">  
+        <div class="parallax-layer layer-1"></div>  
+        <div class="parallax-layer layer-2"></div>  
+        <div class="parallax-layer layer-3"></div>  
 
-        <div class="scroll-indicator">
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </div>
+        <div class="title-container">  
+            <h3 class="text-2xl mb-4 font-light">智能风电解决方案</h3>  
+            <h1 class="text-6xl font-bold mb-6">瀚界科技</h1>  
+            <p class="text-xl">引领风电产业智能化革新</p>  
+        </div>  
 
-    <div class="content-wrapper">
-        <div class="container mx-auto px-4 py-6">
-            <!-- 对话区域 -->
-            <div class="glass-card rounded-2xl shadow-2xl p-6 mb-8">
-                <div class="max-w-4xl mx-auto">
-                    <!-- 对话区域 -->
-                    <div class="space-y-6">
-                        <div>
-                            <label for="message" class="block text-lg font-semibold text-gray-200">
-                                <span class="flex items-center gap-2">
-                                    <i class="fas fa-comments text-blue-400"></i>
-                                    请输入您的问题
-                                </span>
-                            </label>
-                            <textarea
-                                id="message"
-                                class="w-full px-4 py-3 mt-2 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all duration-300 resize-none"
-                                rows="3"
-                                placeholder="请输入您想询问的问题..."
-                            >什么是风力发电？</textarea>
-                        </div>
+        <div class="scroll-indicator">  
+            <i class="fas fa-chevron-down"></i>  
+        </div>  
+    </div>  
 
-                        <!-- 发送按钮 -->
-                        <button
-                            onclick="sendMessage()"
-                            class="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-900 transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
-                        >
-                            <i class="fas fa-paper-plane"></i>
-                            发送问题
-                        </button>
+    <div class="content-wrapper">  
+        <div class="container mx-auto px-4 py-6">  
+            <!-- 对话区域 -->  
+            <div class="glass-card rounded-2xl shadow-2xl p-6 mb-8">  
+                <div class="max-w-4xl mx-auto">  
+                    <!-- 对话区域 -->  
+                    <div class="space-y-6">  
+                        <div>  
+                            <label for="message" class="block text-lg font-semibold text-gray-200">  
+                                <span class="flex items-center gap-2">  
+                                    <i class="fas fa-comments text-blue-400"></i>  
+                                    请输入您的问题  
+                                </span>  
+                            </label>  
+                            <textarea  
+                                id="message"  
+                                class="w-full px-4 py-3 mt-2 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all duration-300 resize-none"  
+                                rows="3"  
+                                placeholder="请输入您想询问的问题..."  
+                            >什么是风力发电？</textarea>  
+                        </div>  
 
-                        <!-- 响应区域 -->
-                        <div>
-                            <label class="block text-lg font-semibold text-gray-200">
-                                <span class="flex items-center gap-2">
-                                    <i class="fas fa-robot text-blue-400"></i>
-                                    AI 助手回复
-                                </span>
-                            </label>
-                            <div id="response" class="mt-2 p-4 rounded-xl min-h-[200px] markdown-body"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        <!-- 发送按钮 -->  
+                        <button  
+                            onclick="sendMessage()"  
+                            class="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-900 transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"  
+                            id="sendButton"  
+                        >  
+                            <i class="fas fa-paper-plane"></i>  
+                            发送问题  
+                        </button>  
 
-                <!-- 项目展示区域 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- 第一列 -->
-                    <div class="glass-card rounded-xl p-4">
-                        <h3 class="text-lg font-semibold text-gray-200 mb-4">
-                            <i class="fas fa-project-diagram mr-2 text-blue-400"></i>
-                            风电运维助手
-                        </h3>
-                        <div class="image-container">
-                            <img src="核心技术3.png" alt="项目1" class="w-full h-48 object-cover rounded-lg" />
-                            <p class="text-sm text-gray-300 mt-2 text-center">致力于让每一位现场运维人员拥有行业前10%运维专家能力
-</p>
-                        </div>
-                    </div>
+                        <!-- 响应区域 -->  
+                        <div>  
+                            <label class="block text-lg font-semibold text-gray-200">  
+                                <span class="flex items-center gap-2">  
+                                    <i class="fas fa-robot text-blue-400"></i>  
+                                    AI 助手回复  
+                                </span>  
+                            </label>  
+                            <div id="response" class="mt-2 p-4 rounded-xl min-h-[200px] markdown-body"></div>  
+                        </div>  
+                    </div>  
+                </div>  
+            </div>  
 
-                    <!-- 第二列 -->
-                    <div class="glass-card rounded-xl p-4">
-                        <h3 class="text-lg font-semibold text-gray-200 mb-4">
-                            <i class="fas fa-project-diagram mr-2 text-blue-400"></i>
-                            故障预警系统
-                        </h3>
-                        <div class="image-container">
-                            <img src="核心技术2.png" alt="项目2" class="w-full h-48 object-cover rounded-lg" />
-                            <p class="text-sm text-gray-300 mt-2 text-center">智能手段助力“早发现、早预警、早处理”最大化降低风电机组故障率和运维成本
-</p>
-                        </div>
-                    </div>
+                <!-- 项目展示区域 -->  
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">  
+                    <!-- 第一列 -->  
+                    <div class="glass-card rounded-xl p-4">  
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">  
+                            <i class="fas fa-project-diagram mr-2 text-blue-400"></i>  
+                            风电运维助手  
+                        </h3>  
+                        <div class="image-container">  
+                            <img src="核心技术3.png" alt="项目1" class="w-full h-48 object-cover rounded-lg" />  
+                            <p class="text-sm text-gray-300 mt-2 text-center">致力于让每一位现场运维人员拥有行业前10%运维专家能力  
+</p>  
+                        </div>  
+                    </div>  
 
-                    <!-- 第三列 -->
-                    <div class="glass-card rounded-xl p-4">
-                        <h3 class="text-lg font-semibold text-gray-200 mb-4">
-                            <i class="fas fa-chart-line mr-2 text-blue-400"></i>
-                            技术优势
-                        </h3>
-                        <div class="image-container">
-                            <img src="核心技术1.png" alt="技术优势" class="w-full h-48 object-cover rounded-lg" />
-                            <p class="text-sm text-gray-300 mt-2 text-center">因果概率大模型</p>
-                        </div>
-                    </div>
-                </div>
-            <!-- 页脚 -->
-            <div class="text-center mt-6 text-gray-400 text-sm">
-                © 2025 瀚界科技 · 专业风电智能解决方案
-            </div>
-        </div>
-    </div>
+                    <!-- 第二列 -->  
+                    <div class="glass-card rounded-xl p-4">  
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">  
+                            <i class="fas fa-project-diagram mr-2 text-blue-400"></i>  
+                            故障预警系统  
+                        </h3>  
+                        <div class="image-container">  
+                            <img src="核心技术2.png" alt="项目2" class="w-full h-48 object-cover rounded-lg" />  
+                            <p class="text-sm text-gray-300 mt-2 text-center">智能手段助力"早发现、早预警、早处理"最大化降低风电机组故障率和运维成本  
+</p>  
+                        </div>  
+                    </div>  
 
-    <script>
-        // 视差滚动效果
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallaxLayers = document.querySelectorAll('.parallax-layer');
+                    <!-- 第三列 -->  
+                    <div class="glass-card rounded-xl p-4">  
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">  
+                            <i class="fas fa-chart-line mr-2 text-blue-400"></i>  
+                            技术优势  
+                        </h3>  
+                        <div class="image-container">  
+                            <img src="核心技术1.png" alt="技术优势" class="w-full h-48 object-cover rounded-lg" />  
+                            <p class="text-sm text-gray-300 mt-2 text-center">因果概率大模型</p>  
+                        </div>  
+                    </div>  
+                </div>  
+            <!-- 页脚 -->  
+            <div class="text-center mt-6 text-gray-400 text-sm">  
+                © 2025 瀚界科技 · 专业风电智能解决方案  
+            </div>  
+        </div>  
+    </div>  
 
-            parallaxLayers.forEach((layer, index) => {
-                const speed = (index + 1) * 0.5;
-                const yPos = -(scrolled * speed);
-                layer.style.transform = `translateY(${yPos}px)`;
-            });
-        });
+    <script>  
+        // 视差滚动效果  
+        window.addEventListener('scroll', () => {  
+            const scrolled = window.pageYOffset;  
+            const parallaxLayers = document.querySelectorAll('.parallax-layer');  
 
-        // Marked配置和消息发送功能
-        marked.setOptions({
-            renderer: new marked.Renderer(),
-            highlight: function(code, lang) {
-                return code;
-            },
-            pedantic: false,
-            gfm: true,
-            breaks: true,
-            sanitize: false,
-            smartypants: false,
-            xhtml: false
-        });
+            parallaxLayers.forEach((layer, index) => {  
+                const speed = (index + 1) * 0.5;  
+                const yPos = -(scrolled * speed);  
+                layer.style.transform = `translateY(${yPos}px)`;  
+            });  
+        });  
 
-        async function sendMessage() {
-            const messageEl = document.getElementById('message');
-            const responseEl = document.getElementById('response');
+        // Marked配置和消息发送功能  
+        marked.setOptions({  
+            renderer: new marked.Renderer(),  
+            highlight: function(code, lang) {  
+                return code;  
+            },  
+            pedantic: false,  
+            gfm: true,  
+            breaks: true,  
+            sanitize: false,  
+            smartypants: false,  
+            xhtml: false  
+        });  
+        
+        // 错误处理函数  
+        function handleApiErrors(error) {  
+            console.error('API Error:', error);  
+            const responseEl = document.getElementById('response');  
+            
+            if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {  
+                responseEl.innerHTML = `  
+                    <div class="bg-red-900/30 p-4 rounded-lg border border-red-500/50">  
+                        <h3 class="text-red-400 font-bold flex items-center gap-2 mb-2">  
+                            <i class="fas fa-exclamation-triangle"></i> 连接错误  
+                        </h3>  
+                        <p>无法连接到 API 服务器。可能原因：</p>  
+                        <ul class="list-disc list-inside mt-2 space-y-1">  
+                            <li>网络连接问题</li>  
+                            <li>API 服务器未运行</li>  
+                            <li>跨域资源共享 (CORS) 策略阻止</li>  
+                        </ul>  
+                        <div class="mt-3 text-sm">  
+                            详细错误：${error.message}  
+                        </div>  
+                    </div>  
+                `;  
+            } else if (error.status === 403) {  
+                responseEl.innerHTML = `  
+                    <div class="bg-red-900/30 p-4 rounded-lg border border-red-500/50">  
+                        <h3 class="text-red-400 font-bold flex items-center gap-2 mb-2">  
+                            <i class="fas fa-lock"></i> 访问被拒绝  
+                        </h3>  
+                        <p>API 服务器拒绝了您的请求。检查您的授权令牌是否有效。</p>  
+                    </div>  
+                `;  
+            } else {  
+                responseEl.innerHTML = `  
+                    <div class="bg-red-900/30 p-4 rounded-lg border border-red-500/50">  
+                        <h3 class="text-red-400 font-bold flex items-center gap-2 mb-2">  
+                            <i class="fas fa-exclamation-circle"></i> 发生错误  
+                        </h3>  
+                        <p>${error.message || '未知错误'}</p>  
+                    </div>  
+                `;  
+            }  
+            
+            // 恢复按钮状态  
+            const sendButton = document.getElementById('sendButton');  
+            sendButton.disabled = false;  
+            sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> 发送问题';  
+        }  
 
-            const url = 'https://6ad66dff.r16.cpolar.top/api/v1/workspace/hantech/chat';
-            const headers = {
-                'accept': 'application/json',
-                'Authorization': 'Bearer 0V37RD6-X3Q4PY5-PPJCQHX-K5W2ATQ',
-                'Content-Type': 'application/json'
-            };
-            const data = {
-                message: messageEl.value,
-                mode: 'chat'
-            };
+        // 多种方法尝试处理CORS问题  
+        async function fetchWithCorsHandling(url, options) {  
+            // 尝试方法1：直接请求  
+            try {  
+                const response = await fetch(url, options);  
+                return response;  
+            } catch (error) {  
+                console.log("直接请求失败，尝试使用代理");  
+                
+                // 尝试方法2：使用cors-anywhere代理  
+                try {  
+                    const corsProxy = "https://cors-anywhere.herokuapp.com/";  
+                    const proxyResponse = await fetch(corsProxy + url, options);  
+                    return proxyResponse;  
+                } catch (proxyError) {  
+                    console.log("cors-anywhere代理失败，尝试使用allorigins");  
+                    
+                    // 尝试方法3：使用allorigins代理  
+                    try {  
+                        // 注意：allorigins主要支持GET请求，对POST支持有限  
+                        const allOriginsProxy = "https://api.allorigins.win/raw?url=";  
+                        // 做一些修改以尝试通过allorigins发送POST请求  
+                        const modifiedOptions = { ...options };  
+                        // 将POST请求参数添加到URL中  
+                        const fullUrl = url + "?" + new URLSearchParams(JSON.parse(options.body));  
+                        const allOriginsResponse = await fetch(allOriginsProxy + encodeURIComponent(fullUrl), modifiedOptions);  
+                        return allOriginsResponse;  
+                    } catch (allOriginsError) {  
+                        // 尝试方法4：后备方案 - 使用JsonP或其他方法（这里仅作示例）  
+                        console.log("所有代理方法均失败");  
+                        throw new Error("无法连接到API，所有跨域解决方案均失败。请检查网络连接或联系管理员配置CORS。");  
+                    }  
+                }  
+            }  
+        }  
 
-            try {
-                responseEl.innerHTML = '<div class="flex items-center gap-2"><div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>正在思考中...</div>';
+        async function sendMessage() {  
+            const messageEl = document.getElementById('message');  
+            const responseEl = document.getElementById('response');  
+            const sendButton = document.getElementById('sendButton');  
+            
+            // 禁用发送按钮并显示加载状态  
+            sendButton.disabled = true;  
+            sendButton.innerHTML = '<div class="loading mr-2"></div> 发送中...';  
 
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify(data)
-                });
+            // 原始API URL  
+            const apiUrl = 'https://6ad66dff.r16.cpolar.top/api/v1/workspace/hantech/chat';  
+            
+            // JSONP/CORS代理URL (如果原始请求失败)  
+            const corsProxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(apiUrl);  
+            
+            const headers = {  
+                'accept': 'application/json',  
+                'Authorization': 'Bearer 0V37RD6-X3Q4PY5-PPJCQHX-K5W2ATQ',  
+                'Content-Type': 'application/json'  
+            };  
+            
+            const data = {  
+                message: messageEl.value,  
+                mode: 'chat'  
+            };  
 
-                const result = await response.json();
-                typeWriter(responseEl, result.textResponse || '未找到回复内容');
-            } catch (error) {
-                responseEl.textContent = '发生错误：' + error.message;
-            }
-        }
+            try {  
+                responseEl.innerHTML = '<div class="flex items-center justify-center gap-3"><div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div><span>正在思考中...</span></div>';  
 
-        function typeWriter(element, text, speed = 30) {
-            let i = 0;
-            let buffer = '';
-            element.innerHTML = '';
+                // 尝试直接发送请求  
+                let response;  
+                try {  
+                    // 首先尝试直接请求  
+                    response = await fetch(apiUrl, {  
+                        method: 'POST',  
+                        headers: headers,  
+                        body: JSON.stringify(data)  
+                    });  
+                } catch (directError) {  
+                    console.log("直接请求失败，尝试使用CORS代理");  
+                    
+                    // 直接请求失败，尝试使用CORS代理  
+                    response = await fetch(corsProxyUrl, {  
+                        method: 'POST',  
+                        headers: headers,  
+                        body: JSON.stringify(data)  
+                    });  
+                }  
 
-            function type() {
-                if (i < text.length) {
-                    buffer += text.charAt(i);
-                    element.innerHTML = marked.parse(buffer);
-                    i++;
-                    setTimeout(type, speed);
-                }
-            }
-            type();
-        }
-    </script>
-</body>
-</html>
+                if (!response.ok) {  
+                    throw new Error(`HTTP error! status: ${response.status}`);  
+                }  
+
+                const result = await response.json();  
+                
+                // 恢复按钮状态  
+                sendButton.disabled = false;  
+                sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> 发送问题';  
+                
+                // 显示响应  
+                typeWriter(responseEl, result.textResponse || '未找到回复内容');  
+            } catch (error) {  
+                console.error('Error:', error);  
+                handleApiErrors(error);  
+            }  
+        }  
+
+        function typeWriter(element, text, speed = 30) {  
+            let i = 0;  
+            let buffer = '';  
+            element.innerHTML = '';  
+
+            function type() {  
+                if (i < text.length) {  
+                    buffer += text.charAt(i);  
+                    element.innerHTML = marked.parse(buffer);  
+                    i++;  
+                    setTimeout(type, speed);  
+                }  
+            }  
+            type();  
+        }  
+    </script>  
+</body>  
+</html>  
