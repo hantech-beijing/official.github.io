@@ -1,229 +1,79 @@
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>瀚界科技风电大模型</title>
+    <title>风起时域风电大模型</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.css">
     <style>
-        :root {
-            --primary-color: #2563eb;
-        }
-
         body {
-            background-color: #0f172a;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: #e2e8f0;
             min-height: 100vh;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://images.unsplash.com/photo-1466611653911-95081537e5b7') center/cover;
-            opacity: 0.2;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .parallax-header {
-            position: relative;
-            height: 70vh; /* 减小高度 */
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .parallax-layer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .layer-1 {
-            z-index: 1;
-            background: url('https://images.unsplash.com/photo-1466611653911-95081537e5b7') center/cover;
-            filter: brightness(0.7);
-        }
-
-        .layer-2 {
-            z-index: 2;
-            background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 1));
-            transform: translateY(30%);
-        }
-
-        .layer-3 {
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        .title-container {
-            position: relative;
-            z-index: 4;
-            text-align: center;
-            color: white;
-            transform: translateY(50%);
-            opacity: 0;
-            animation: fadeInUp 1s forwards;
-        }
-
-        @keyframes fadeInUp {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .glass-effect {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
             transition: all 0.3s ease;
         }
 
         .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.47);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
         }
 
-        .nav-items {
-            color: #e2e8f0;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .nav-items:hover {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .content-wrapper {
-            position: relative;
-            z-index: 5;
-            margin-top: -10vh;
-            padding-bottom: 4rem;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 2rem;
-            animation: bounce 2s infinite;
-            z-index: 5;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-30px);
-            }
-            60% {
-                transform: translateY(-15px);
-            }
-        }
-
-        #message {
+        .input-field {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: #e2e8f0;
+            transition: all 0.3s ease;
         }
 
-        #message::placeholder {
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .input-field::placeholder {
             color: #94a3b8;
         }
 
-        .markdown-body {
-            color: #e2e8f0 !important;
-            background-color: transparent !important;
-        }
-
-        .image-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 0.5rem;
-        }
-
-        .image-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 0.5));
-        }
-
-        .image-container img {
-            transition: transform 0.5s ease;
-        }
-
-        .image-container:hover img {
-            transform: scale(1.1);
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* 对话消息样式 */
         .message {
             margin-bottom: 1rem;
             padding: 1rem;
             border-radius: 1rem;
-            max-width: 80%;
+            max-width: 85%;
+            word-wrap: break-word;
         }
 
         .user-message {
-            background: rgba(37, 99, 235, 0.2);
-            border: 1px solid rgba(37, 99, 235, 0.3);
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
             margin-left: auto;
-            border-top-right-radius: 0;
+            border-top-right-radius: 0.5rem;
         }
 
         .ai-message {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.2);
             margin-right: auto;
-            border-top-left-radius: 0;
+            border-top-left-radius: 0.5rem;
         }
 
-        /* 聊天容器滚动样式 */
         .chat-container {
             scrollbar-width: thin;
             scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
@@ -241,305 +91,326 @@
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 3px;
         }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
-    <div id="home">
-        <div class="parallax-header">
-            <div class="parallax-layer layer-1"></div>
-            <div class="parallax-layer layer-2"></div>
-            <div class="parallax-layer layer-3"></div>
-
-            <div class="title-container">
-                <h3 class="text-2xl mb-4 font-light">智能风电解决方案</h3>
-                <h1 class="text-6xl font-bold mb-6">瀚界科技</h1>
-                <p class="text-xl">引领风电产业智能化革新</p>
+    <!-- 登录界面 -->
+    <div id="loginPage" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-md fade-in">
+            <div class="text-center mb-8">
+                <div class="text-4xl mb-4">
+                    <i class="fas fa-wind text-blue-400"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-2">风起时域</h1>
+                <p class="text-gray-300">风电大模型对话系统</p>
             </div>
 
-            <div class="scroll-indicator">
-                <i class="fas fa-chevron-down"></i>
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-200 mb-2">
+                        <i class="fas fa-user mr-2"></i>用户名
+                    </label>
+                    <input
+                        type="text"
+                        id="username"
+                        class="input-field w-full px-4 py-3 rounded-lg focus:outline-none"
+                        placeholder="请输入用户名"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-200 mb-2">
+                        <i class="fas fa-lock mr-2"></i>密码
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        class="input-field w-full px-4 py-3 rounded-lg focus:outline-none"
+                        placeholder="请输入密码"
+                        required
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-primary w-full py-3 rounded-lg text-white font-semibold flex items-center justify-center gap-2"
+                >
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录系统
+                </button>
+            </form>
+
+            <div id="loginError" class="hidden mt-4 p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-300 text-sm text-center">
+                用户名或密码错误，请重试
+            </div>
+        </div>
+    </div>
+
+    <!-- 主界面 -->
+    <div id="mainPage" class="hidden min-h-screen">
+        <!-- 头部 -->
+        <div class="glass-effect p-4 border-b border-white/10">
+            <div class="container mx-auto flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-wind text-blue-400 text-2xl"></i>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">风起时域</h1>
+                        <p class="text-sm text-gray-300">风电大模型助手</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-300">欢迎您，<span id="currentUser"></span></span>
+                    <button onclick="logout()" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="content-wrapper">
-            <div class="container mx-auto px-4 py-6">
-                <!-- 项目简介与对话系统整合 -->
-                <div class="glass-card rounded-xl p-6 mb-8">
-                    <h2 class="text-2xl font-bold text-center text-blue-400 mb-4">
-                        <i class="fas fa-robot mr-2"></i>
-                        瀚界大模型对话助手
-                    </h2>
-                    <p class="text-gray-300 text-center max-w-3xl mx-auto mb-6">
-                        瀚界因果概率大模型专为风电领域打造，拥有丰富的风电专业知识和经验，能够解答您关于风电技术、故障诊断和运维策略的各类问题。
-                    </p>
-
-                    <!-- 对话历史容器 -->
-                    <div id="chat-history" class="chat-container h-96 overflow-y-auto mb-4 p-4 rounded-xl glass-effect">
-                        <!-- 对话消息将在这里动态添加 -->
-                        <div class="text-center text-gray-400 my-8">
-                            <i class="fas fa-comments text-4xl mb-3 opacity-60"></i>
-                            <p>您的对话将显示在这里</p>
-                            <p class="text-sm mt-2">试试问我关于风电的问题吧</p>
-                        </div>
+        <!-- 主要内容区域 -->
+        <div class="container mx-auto p-4 max-w-4xl">
+            <!-- 对话区域 -->
+            <div class="glass-card rounded-2xl p-6 mb-6 fade-in">
+                <div class="flex items-center gap-3 mb-6">
+                    <i class="fas fa-robot text-blue-400 text-2xl"></i>
+                    <div>
+                        <h2 class="text-xl font-semibold text-white">智能对话助手</h2>
+                        <p class="text-sm text-gray-300">专业的风电技术咨询与故障诊断</p>
                     </div>
+                </div>
 
-                    <!-- 输入区域 -->
-                    <div class="space-y-4">
-                        <div>
-                            <label for="message" class="block text-lg font-semibold text-gray-200">
-                                <span class="flex items-center gap-2">
-                                    <i class="fas fa-comments text-blue-400"></i>
-                                    输入您的问题
-                                </span>
-                            </label>
-                            <textarea
-                                id="message"
-                                class="w-full px-4 py-3 mt-2 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all duration-300 resize-none"
-                                rows="3"
-                                placeholder="请输入您想询问的问题..."
-                            ></textarea>
-                        </div>
+                <!-- 对话历史 -->
+                <div id="chatHistory" class="chat-container h-96 overflow-y-auto mb-4 p-4 rounded-xl glass-effect">
+                    <div class="text-center text-gray-400 my-8">
+                        <i class="fas fa-comments text-3xl mb-3 opacity-60"></i>
+                        <p class="text-lg">开始您的对话</p>
+                        <p class="text-sm mt-2">我可以帮助您解决风电相关的问题</p>
+                    </div>
+                </div>
 
-                        <!-- 发送按钮 -->
+                <!-- 输入区域 -->
+                <div class="space-y-4">
+                    <div class="flex gap-3">
+                        <textarea
+                            id="messageInput"
+                            class="input-field flex-1 px-4 py-3 rounded-xl resize-none focus:outline-none"
+                            rows="2"
+                            placeholder="请输入您的问题..."
+                        ></textarea>
                         <button
                             onclick="sendMessage()"
-                            class="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-900 transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
                             id="sendButton"
+                            class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2 whitespace-nowrap"
                         >
                             <i class="fas fa-paper-plane"></i>
-                            发送问题
+                            发送
                         </button>
                     </div>
                 </div>
+            </div>
 
-                <!-- 项目卡片展示区域 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- 第一列 -->
-                    <div class="glass-card rounded-xl p-4">
-                        <h3 class="text-lg font-semibold text-gray-200 mb-4">
-                            <i class="fas fa-project-diagram mr-2 text-blue-400"></i>
-                            风电运维助手
-                        </h3>
-                        <div class="image-container">
-                            <img src="核心技术3.png" alt="项目1" class="w-full h-48 object-cover rounded-lg" />
-                            <p class="text-sm text-gray-300 mt-2 text-center">致力于让每一位现场运维人员拥有行业前10%运维专家能力</p>
-                        </div>
-                    </div>
-
-                    <!-- 第二列 -->
-                    <div class="glass-card rounded-xl p-4">
-                        <h3 class="text-lg font-semibold text-gray-200 mb-4">
-                            <i class="fas fa-project-diagram mr-2 text-blue-400"></i>
-                            故障预警系统
-                        </h3>
-                        <div class="image-container">
-                            <img src="核心技术2.png" alt="项目2" class="w-full h-48 object-cover rounded-lg" />
-                            <p class="text-sm text-gray-300 mt-2 text-center">智能手段助力"早发现、早预警、早处理"最大化降低风电机组故障率和运维成本</p>
-                        </div>
-                    </div>
-
-                    <!-- 第三列 -->
-                    <div class="glass-card rounded-xl p-4">
-                        <h3 class="text-lg font-semibold text-gray-200 mb-4">
-                            <i class="fas fa-chart-line mr-2 text-blue-400"></i>
-                            技术优势
-                        </h3>
-                        <div class="image-container">
-                            <img src="核心技术1.png" alt="技术优势" class="w-full h-48 object-cover rounded-lg" />
-                            <p class="text-sm text-gray-300 mt-2 text-center">因果概率大模型</p>
-                        </div>
-                    </div>
+            <!-- 快捷功能 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="glass-card rounded-xl p-4 text-center hover:cursor-pointer" onclick="quickQuestion('风机故障诊断')">
+                    <i class="fas fa-tools text-blue-400 text-2xl mb-2"></i>
+                    <p class="text-sm text-gray-300">故障诊断</p>
                 </div>
-
-                <!-- 首页介绍文字 -->
-                <div class="glass-card rounded-xl p-6 mt-8">
-                    <h2 class="text-2xl font-bold text-center text-blue-400 mb-4">
-                        <i class="fas fa-wind mr-2"></i>
-                        风电智能化解决方案
-                    </h2>
-                    <p class="text-gray-300 text-center max-w-3xl mx-auto">
-                        瀚界科技致力于将人工智能技术与风电运维深度融合，打造智能化运维解决方案。
-                        通过我们的因果概率大模型，实现风电机组故障的精准预测与诊断，助力风电场降本增效。
-                    </p>
+                <div class="glass-card rounded-xl p-4 text-center hover:cursor-pointer" onclick="quickQuestion('运维策略优化')">
+                    <i class="fas fa-cogs text-green-400 text-2xl mb-2"></i>
+                    <p class="text-sm text-gray-300">运维优化</p>
                 </div>
-
-                <!-- 页脚 -->
-                <div class="text-center mt-6 text-gray-400 text-sm">
-                    © 2025 瀚界科技 · 专业风电智能解决方案
+                <div class="glass-card rounded-xl p-4 text-center hover:cursor-pointer" onclick="quickQuestion('风电技术咨询')">
+                    <i class="fas fa-question-circle text-yellow-400 text-2xl mb-2"></i>
+                    <p class="text-sm text-gray-300">技术咨询</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 存储对话历史
+        // 用户凭据
+        const CREDENTIALS = {
+            username: 'haoshuai',
+            password: 'fengqishiyu'
+        };
+
+        // 对话历史
         let chatHistory = [];
-
-        // 视差滚动效果
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallaxLayers = document.querySelectorAll('.parallax-layer');
-
-            parallaxLayers.forEach((layer, index) => {
-                const speed = (index + 1) * 0.5;
-                const yPos = -(scrolled * speed);
-                layer.style.transform = `translateY(${yPos}px)`;
-            });
-        });
 
         // Marked配置
         marked.setOptions({
-            renderer: new marked.Renderer(),
-            highlight: function(code, lang) {
-                return code;
-            },
-            pedantic: false,
-            gfm: true,
             breaks: true,
-            sanitize: false,
-            smartypants: false,
-            xhtml: false
+            gfm: true
         });
 
-        // 添加消息到聊天历史
-        function addMessageToChat(content, isUser) {
-            const chatContainer = document.getElementById('chat-history');
+        // 登录处理
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
 
-            // 移除初始提示（如果存在）
+            if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
+                // 登录成功
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('mainPage').classList.remove('hidden');
+                document.getElementById('currentUser').textContent = username;
+                errorDiv.classList.add('hidden');
+            } else {
+                // 登录失败
+                errorDiv.classList.remove('hidden');
+                document.getElementById('password').value = '';
+            }
+        });
+
+        // 退出登录
+        function logout() {
+            document.getElementById('mainPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').classList.add('hidden');
+            
+            // 清空对话历史
+            chatHistory = [];
+            const chatContainer = document.getElementById('chatHistory');
+            chatContainer.innerHTML = `
+                <div class="text-center text-gray-400 my-8">
+                    <i class="fas fa-comments text-3xl mb-3 opacity-60"></i>
+                    <p class="text-lg">开始您的对话</p>
+                    <p class="text-sm mt-2">我可以帮助您解决风电相关的问题</p>
+                </div>
+            `;
+        }
+
+        // 快捷问题
+        function quickQuestion(question) {
+            document.getElementById('messageInput').value = question;
+            sendMessage();
+        }
+
+        // 添加消息到聊天
+        function addMessageToChat(content, isUser) {
+            const chatContainer = document.getElementById('chatHistory');
+            
+            // 移除初始提示
             const initialPrompt = chatContainer.querySelector('.text-center');
             if (initialPrompt) {
                 initialPrompt.remove();
             }
 
-            // 创建消息元素
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
-
-            // 设置消息内容
+            
             if (isUser) {
                 messageDiv.textContent = content;
             } else {
                 messageDiv.innerHTML = marked.parse(content);
-                messageDiv.classList.add('markdown-body');
             }
 
-            // 添加到聊天容器
             chatContainer.appendChild(messageDiv);
-
-            // 滚动到底部
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            // 更新聊天历史数组
             chatHistory.push({
                 role: isUser ? 'user' : 'assistant',
                 content: content
             });
         }
 
-        // 错误处理函数
-        function handleApiErrors(error) {
-            console.error('API Error:', error);
-            addMessageToChat(`**错误:** ${error.message || '发生未知错误，请稍后重试。'}`, false);
-
-            // 恢复按钮状态
-            const sendButton = document.getElementById('sendButton');
-            sendButton.disabled = false;
-            sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> 发送问题';
-        }
-
+        // 发送消息
         async function sendMessage() {
-            const messageEl = document.getElementById('message');
+            const messageInput = document.getElementById('messageInput');
             const sendButton = document.getElementById('sendButton');
+            const userMessage = messageInput.value.trim();
 
-            // 获取用户输入
-            const userMessage = messageEl.value.trim();
-
-            // 验证用户输入
             if (!userMessage) return;
 
-            // 禁用发送按钮并显示加载状态
+            // 禁用按钮
             sendButton.disabled = true;
-            sendButton.innerHTML = '<div class="loading mr-2"></div> 发送中...';
+            sendButton.innerHTML = '<div class="loading mr-2"></div>发送中';
 
-            // 添加用户消息到聊天
+            // 添加用户消息
             addMessageToChat(userMessage, true);
+            messageInput.value = '';
 
-            // 清空输入框
-            messageEl.value = '';
+            // 添加AI思考状态
+            const tempMessage = document.createElement('div');
+            tempMessage.className = 'message ai-message';
+            tempMessage.innerHTML = '<div class="flex items-center"><div class="loading mr-2"></div><span>AI正在思考...</span></div>';
+            document.getElementById('chatHistory').appendChild(tempMessage);
 
-            // 创建临时的AI消息占位（用于流式显示）
-            const tempAiMessage = document.createElement('div');
-            tempAiMessage.className = 'message ai-message markdown-body';
-            tempAiMessage.innerHTML = '<div class="flex items-center"><div class="loading mr-2"></div><span>思考中...</span></div>';
-            document.getElementById('chat-history').appendChild(tempAiMessage);
-
-            // Dify API URL
+            // API配置
             const apiUrl = 'https://78e7ceeb.r16.cpolar.top/v1/chat-messages';
-
-            // CORS代理URL（备用）
-            const corsProxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(apiUrl);
-
-            // Dify API密钥
             const apiKey = 'app-TOJJ8tsfcEOpPP7Dvr1UKsM5';
 
-            // Dify API请求头
-            const headers = {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            };
-
-            // 准备对话历史 - 只取最近的消息（避免过长）
-            const recentHistory = chatHistory.slice(-10);
-
-            // 构建消息格式
-            const messages = recentHistory.map(msg => ({
-                role: msg.role,
-                content: msg.content
-            }));
-
-            // Dify API请求体 - 包含上下文历史
             const data = {
                 inputs: {},
                 query: userMessage,
                 user: "hantech",
                 response_mode: "streaming",
-                conversation_id: "", // 如果有持久化会话ID可以添加
-                messages: messages
+                conversation_id: "",
+                messages: chatHistory.slice(-10)
             };
 
             try {
-                console.log("发送请求:", JSON.stringify(data)); // 记录请求数据用于调试
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
 
-                // 尝试直接发送请求
-                let response;
-                try {
-                    response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: headers,
-                        body: JSON.stringify(data)
-                    });
-                } catch (directError) {
-                    console.log("直接请求失败，尝试使用CORS代理");
-                    response = await fetch(corsProxyUrl, {
-                        method: 'POST',
-                        headers: headers,
-                        body: JSON.stringify(data)
-                    });
-                }
-
-                // 检查响应状态
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('API响应错误:', response.status, errorText);
-                    throw new Error(`HTTP error! status: ${response.status}, details: ${errorText}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                // 处理流式响应
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
 
-                // 移除临时占位消息
-                tempAiMessage.remove();
+                // 移除临时消息
+                tempMessage.remove();
 
                 let responseText = '';
 
@@ -548,66 +419,49 @@
                     if (done) break;
 
                     const chunk = decoder.decode(value, { stream: true });
-                    console.log("收到数据块:", chunk); // 记录接收到的数据
+                    const lines = chunk.split('\n').filter(line => line.trim() !== '');
 
-                    try {
-                        // 尝试解析每个数据块
-                        const lines = chunk.split('\n').filter(line => line.trim() !== '');
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const jsonStr = line.substring(6);
+                            if (jsonStr === '[DONE]') continue;
 
-                        for (const line of lines) {
-                            if (line.startsWith('data: ')) {
-                                const jsonStr = line.substring(6);
-                                if (jsonStr === '[DONE]') continue;
-
+                            try {
                                 const jsonData = JSON.parse(jsonStr);
                                 if (jsonData.answer) {
-                                    // 如果这是第一个块，创建新的消息
                                     if (responseText === '') {
                                         responseText = jsonData.answer;
                                         addMessageToChat(responseText, false);
                                     } else {
-                                        // 更新现有消息
                                         responseText += jsonData.answer;
-
-                                        // 更新最后一条AI消息
                                         const messages = document.querySelectorAll('.ai-message');
                                         const lastMessage = messages[messages.length - 1];
                                         if (lastMessage) {
                                             lastMessage.innerHTML = marked.parse(responseText);
                                         }
-
-                                        // 更新聊天历史中的最后一条记录
                                         chatHistory[chatHistory.length - 1].content = responseText;
                                     }
                                 }
+                            } catch (e) {
+                                console.error('解析数据出错:', e);
                             }
                         }
-                    } catch (e) {
-                        console.error('解析流数据出错:', e);
                     }
                 }
 
             } catch (error) {
                 console.error('Error:', error);
-
-                // 移除临时占位消息
-                tempAiMessage.remove();
-
-                // 显示错误消息
+                tempMessage.remove();
                 addMessageToChat(`**错误:** ${error.message || '发生未知错误，请稍后重试。'}`, false);
             } finally {
                 // 恢复按钮状态
                 sendButton.disabled = false;
-                sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> 发送问题';
-
-                // 聊天窗口滚动到底部
-                const chatContainer = document.getElementById('chat-history');
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+                sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>发送';
             }
         }
 
-        // 监听回车键发送消息
-        document.getElementById('message').addEventListener('keydown', function(e) {
+        // 回车键发送
+        document.getElementById('messageInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
@@ -615,4 +469,4 @@
         });
     </script>
 </body>
-</html>  
+</html>
