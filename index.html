@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -266,14 +267,14 @@
     </div>
 
     <script>
-        // 用户凭据
-const CREDENTIALS = [
-    { username: 'haoshuai', password: 'fengqishiyu'},
-    { username: 'yangdingguo', password: 'fengqishiyu'},
-    { username: 'dongyehong', password: 'fengqishiyu'},
-    { username: 'admin', password: 'fegnqishiyu'},
-    { username: 'guest', password: 'fengqishiyu'}
-];
+        // 用户凭据 - 修正了admin密码的拼写错误
+        const CREDENTIALS = [
+            { username: 'haoshuai', password: 'fengqishiyu'},
+            { username: 'yangdingguo', password: 'fengqishiyu'},
+            { username: 'dongyehong', password: 'fengqishiyu'},
+            { username: 'admin', password: 'fengqishiyu'},  // 修正：fegnqishiyu -> fengqishiyu
+            { username: 'guest', password: 'fengqishiyu'}
+        ];
 
         // 对话历史
         let chatHistory = [];
