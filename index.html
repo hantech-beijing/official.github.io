@@ -268,11 +268,11 @@
     <script>
         // 用户凭据
 const CREDENTIALS = [
-    { username: 'haoshuai', password: 'fengqishiyu', displayName: '郝帅', role: '管理员' },
-    { username: 'yangdingguo', password: 'fengqishiyu', displayName: '杨定国', role: '管理员' },
-    { username: 'dongyehong', password: 'fengqishiyu', displayName: '董晔弘', role: '管理员' },
-    { username: 'admin', password: 'fegnqishiyu', displayName: '操作员', role: '操作员' },
-    { username: 'guest', password: 'fengqishiyu', displayName: '访客', role: '访客' }
+    { username: 'haoshuai', password: 'fengqishiyu'},
+    { username: 'yangdingguo', password: 'fengqishiyu'},
+    { username: 'dongyehong', password: 'fengqishiyu'},
+    { username: 'admin', password: 'fegnqishiyu'},
+    { username: 'guest', password: 'fengqishiyu'}
 ];
 
         // 对话历史
@@ -284,6 +284,11 @@ const CREDENTIALS = [
             gfm: true
         });
 
+        // 用户验证函数
+        function validateUser(username, password) {
+            return CREDENTIALS.find(user => user.username === username && user.password === password);
+        }
+        
         // 登录处理
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -291,8 +296,11 @@ const CREDENTIALS = [
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('loginError');
-
-            if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
+        
+            // 修正后的验证方式：使用 find 方法在数组中查找匹配的用户
+            const validUser = validateUser(username, password);
+            
+            if (validUser) {
                 // 登录成功
                 document.getElementById('loginPage').classList.add('hidden');
                 document.getElementById('mainPage').classList.remove('hidden');
