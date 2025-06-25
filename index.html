@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -268,14 +267,13 @@
 
     <script>
         // 用户凭据
-// 方式2: 对象形式（如果用户不多的话）
-const CREDENTIALS = {
-    'haoshuai': { password: 'fengqishiyu', displayName: '郝帅', role: '管理员' },
-    'yangdingguo': { password: 'fengqishiyu', displayName: '杨定国', role: '管理员' },
-    'dongyehong': { password: 'fengqishiyu', displayName: '董晔弘', role: '管理员' },
-    'admin': { password: 'fengqishiyu', displayName: '操作员', role: '操作员' },
-    'guest': { password: 'fengqishiyu', displayName: '访客', role: '访客' }
-};
+const CREDENTIALS = [
+    { username: 'haoshuai', password: 'fengqishiyu', displayName: '郝帅', role: '管理员' },
+    { username: 'yangdingguo', password: 'fengqishiyu', displayName: '杨定国', role: '管理员' },
+    { username: 'dongyehong', password: 'fengqishiyu', displayName: '董晔弘', role: '管理员' },
+    { username: 'admin', password: 'fegnqishiyu', displayName: '操作员', role: '操作员' },
+    { username: 'guest', password: 'fengqishiyu', displayName: '访客', role: '访客' }
+];
 
         // 对话历史
         let chatHistory = [];
