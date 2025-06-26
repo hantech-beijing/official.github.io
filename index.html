@@ -1,481 +1,505 @@
 
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>风起时域风电大模型</title>
+    <title>风起大模型</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        .message-bubble {
+            animation: fadeIn 0.3s ease-in;
         }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .input-field {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #e2e8f0;
-            transition: all 0.3s ease;
-        }
-
-        .input-field:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .input-field::placeholder {
-            color: #94a3b8;
-        }
-
-        .message {
-            margin-bottom: 1rem;
-            padding: 1rem;
-            border-radius: 1rem;
-            max-width: 85%;
-            word-wrap: break-word;
-        }
-
-        .user-message {
-            background: rgba(59, 130, 246, 0.2);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            margin-left: auto;
-            border-top-right-radius: 0.5rem;
-        }
-
-        .ai-message {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-right: auto;
-            border-top-left-radius: 0.5rem;
-        }
-
-        .chat-container {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-        }
-
-        .chat-container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chat-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .chat-container::-webkit-scrollbar-thumb {
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            transition: all 0.3s ease;
+        .typing-indicator {
+            animation: pulse 1.5s ease-in-out infinite;
         }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #2563eb, #1e40af);
-            transform: translateY(-1px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
-        }
-
-        .hidden {
-            display: none !important;
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
     </style>
 </head>
-<body>
-    <!-- 登录界面 -->
-    <div id="loginPage" class="min-h-screen flex items-center justify-center p-4">
-        <div class="glass-card rounded-2xl p-8 w-full max-w-md fade-in">
-            <div class="text-center mb-8">
-                <div class="text-4xl mb-4">
-                    <i class="fas fa-wind text-blue-400"></i>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto max-w-4xl p-4">
+        <!-- 头部 -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-4">
+            <h1 class="text-3xl font-bold text-gray-800 text-center">&#129303; 风起大模型</h1>
+            <p class="text-gray-600 text-center mt-2">基于风起时域-14B模型</p>
+            <div class="flex items-center justify-center mt-4 space-x-6">
+                <div class="flex items-center">
+                    <div id="status-indicator" class="w-3 h-3 rounded-full bg-gray-400 mr-2"></div>
+                    <span id="status-text" class="text-sm text-gray-600">连接中...</span>
                 </div>
-                <h1 class="text-3xl font-bold text-white mb-2">风起时域</h1>
-                <p class="text-gray-300">风电大模型对话系统</p>
-            </div>
-
-            <form id="loginForm" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-200 mb-2">
-                        <i class="fas fa-user mr-2"></i>用户名
-                    </label>
-                    <input
-                        type="text"
-                        id="username"
-                        class="input-field w-full px-4 py-3 rounded-lg focus:outline-none"
-                        placeholder="请输入用户名"
-                        required
-                    >
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-600 mr-2">会话：</span>
+                    <span id="session-status" class="text-sm font-mono text-blue-600">未开始</span>
                 </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-200 mb-2">
-                        <i class="fas fa-lock mr-2"></i>密码
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        class="input-field w-full px-4 py-3 rounded-lg focus:outline-none"
-                        placeholder="请输入密码"
-                        required
-                    >
-                </div>
-
-                <button
-                    type="submit"
-                    class="btn-primary w-full py-3 rounded-lg text-white font-semibold flex items-center justify-center gap-2"
-                >
-                    <i class="fas fa-sign-in-alt"></i>
-                    登录系统
-                </button>
-            </form>
-
-            <div id="loginError" class="hidden mt-4 p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-300 text-sm text-center">
-                用户名或密码错误，请重试
             </div>
         </div>
-    </div>
 
-    <!-- 主界面 -->
-    <div id="mainPage" class="hidden min-h-screen">
-        <!-- 头部 -->
-        <div class="glass-effect p-4 border-b border-white/10">
-            <div class="container mx-auto flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-wind text-blue-400 text-2xl"></i>
-                    <div>
-                        <h1 class="text-xl font-bold text-white">风起时域</h1>
-                        <p class="text-sm text-gray-300">风电大模型助手</p>
+        <!-- 会话控制面板 -->
+        <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+            <div class="flex flex-wrap gap-3 justify-center">
+                <button
+                    onclick="startNewSession()"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-sm"
+                >
+                    🆕 新会话
+                </button>
+                <button
+                    onclick="clearCurrentSession()"
+                    class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-colors text-sm"
+                >
+                    🧹 清空历史
+                </button>
+                <button
+                    onclick="showSessionHistory()"
+                    class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors text-sm"
+                >
+                    📋 查看历史
+                </button>
+                <button
+                    onclick="exportChat()"
+                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors text-sm"
+                >
+                    💾 导出对话
+                </button>
+            </div>
+        </div>
+
+        <!-- 聊天容器 -->
+        <div class="bg-white rounded-lg shadow-md flex flex-col h-96">
+            <!-- 消息区域 -->
+            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4">
+                <div class="message-bubble flex items-start space-x-3">
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">AI</div>
+                    <div class="bg-blue-50 rounded-lg p-3 max-w-md">
+                        <p class="text-gray-800">你好！我是基于风起时域-14B的AI助手，有什么可以帮助你的吗？我现在可以记住我们的对话内容了！</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-300">欢迎您，<span id="currentUser"></span></span>
-                    <button onclick="logout()" class="text-gray-400 hover:text-white transition-colors">
-                        <i class="fas fa-sign-out-alt"></i>
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="border-t p-4">
+                <div class="flex space-x-3">
+                    <input
+                        type="text"
+                        id="message-input"
+                        placeholder="输入你的消息..."
+                        class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button
+                        id="send-button"
+                        onclick="sendMessage()"
+                        class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                    >
+                        发送
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- 主要内容区域 -->
-        <div class="container mx-auto p-4 max-w-4xl">
-            <!-- 对话区域 -->
-            <div class="glass-card rounded-2xl p-6 mb-6 fade-in">
-                <div class="flex items-center gap-3 mb-6">
-                    <i class="fas fa-robot text-blue-400 text-2xl"></i>
-                    <div>
-                        <h2 class="text-xl font-semibold text-white">智能对话助手</h2>
-                        <p class="text-sm text-gray-300">专业的风电技术咨询与故障诊断</p>
-                    </div>
+        <!-- 设置面板 -->
+        <div class="bg-white rounded-lg shadow-md p-4 mt-4">
+            <h3 class="text-lg font-semibold mb-3">连接设置</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">服务器地址</label>
+                    <input
+                        type="text"
+                        id="server-url"
+                        value="http://5b8077f.r6.cpolar.cn"
+                        class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
                 </div>
-
-                <!-- 对话历史 -->
-                <div id="chatHistory" class="chat-container h-96 overflow-y-auto mb-4 p-4 rounded-xl glass-effect">
-                    <div class="text-center text-gray-400 my-8">
-                        <i class="fas fa-comments text-3xl mb-3 opacity-60"></i>
-                        <p class="text-lg">开始您的对话</p>
-                        <p class="text-sm mt-2">我可以帮助您解决风电相关的问题</p>
-                    </div>
-                </div>
-
-                <!-- 输入区域 -->
-                <div class="space-y-4">
-                    <div class="flex gap-3">
-                        <textarea
-                            id="messageInput"
-                            class="input-field flex-1 px-4 py-3 rounded-xl resize-none focus:outline-none"
-                            rows="2"
-                            placeholder="请输入您的问题..."
-                        ></textarea>
-                        <button
-                            onclick="sendMessage()"
-                            id="sendButton"
-                            class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2 whitespace-nowrap"
-                        >
-                            <i class="fas fa-paper-plane"></i>
-                            发送
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 快捷功能 -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="glass-card rounded-xl p-4 text-center hover:cursor-pointer" onclick="quickQuestion('风机故障诊断')">
-                    <i class="fas fa-tools text-blue-400 text-2xl mb-2"></i>
-                    <p class="text-sm text-gray-300">故障诊断</p>
-                </div>
-                <div class="glass-card rounded-xl p-4 text-center hover:cursor-pointer" onclick="quickQuestion('运维策略优化')">
-                    <i class="fas fa-cogs text-green-400 text-2xl mb-2"></i>
-                    <p class="text-sm text-gray-300">运维优化</p>
-                </div>
-                <div class="glass-card rounded-xl p-4 text-center hover:cursor-pointer" onclick="quickQuestion('风电技术咨询')">
-                    <i class="fas fa-question-circle text-yellow-400 text-2xl mb-2"></i>
-                    <p class="text-sm text-gray-300">技术咨询</p>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">操作</label>
+                    <button
+                        onclick="testConnection()"
+                        class="bg-green-500 text-white px-4 py-2 rounded text-sm hover:bg-green-600 transition-colors mr-2"
+                    >
+                        测试连接
+                    </button>
+                    <span id="context-info" class="text-xs text-gray-500"></span>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 历史记录模态框 -->
+    <div id="history-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
+            <h3 class="text-lg font-semibold mb-4">会话历史</h3>
+            <div id="history-content" class="space-y-2 text-sm">
+                <!-- 历史内容将在这里显示 -->
+            </div>
+            <div class="mt-4 flex justify-end">
+                <button onclick="closeHistoryModal()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">关闭</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // 用户凭据 - 修正了admin密码的拼写错误
-        const CREDENTIALS = [
-            { username: 'haoshuai', password: 'fengqishiyu'},
-            { username: 'yangdingguo', password: 'fengqishiyu'},
-            { username: 'dongyehong', password: 'fengqishiyu'},
-            { username: 'admin', password: 'fengqishiyu'},  // 修正：fegnqishiyu -> fengqishiyu
-            { username: 'guest', password: 'fengqishiyu'}
-        ];
+        let isConnected = false;
+        let currentSessionId = null;
+        let contextLength = 0;
 
-        // 对话历史
-        let chatHistory = [];
+        // 页面加载时测试连接
+        window.onload = function() {
+            testConnection();
+        };
 
-        // Marked配置
-        marked.setOptions({
-            breaks: true,
-            gfm: true
-        });
+        // 测试服务器连接
+        async function testConnection() {
+            const serverUrl = document.getElementById('server-url').value;
+            const statusIndicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
 
-        // 用户验证函数
-        function validateUser(username, password) {
-            return CREDENTIALS.find(user => user.username === username && user.password === password);
+            try {
+                const response = await fetch(`${serverUrl}/health`);
+                if (response.ok) {
+                    const data = await response.json();
+                    isConnected = true;
+                    statusIndicator.className = 'w-3 h-3 rounded-full bg-green-400 mr-2';
+                    statusText.textContent = '连接正常';
+
+                    // 更新上下文信息
+                    document.getElementById('context-info').textContent =
+                        `活跃会话: ${data.active_sessions || 0}`;
+                } else {
+                    throw new Error('服务器响应异常');
+                }
+            } catch (error) {
+                isConnected = false;
+                statusIndicator.className = 'w-3 h-3 rounded-full bg-red-400 mr-2';
+                statusText.textContent = '连接失败';
+                console.error('连接测试失败:', error);
+            }
         }
-        
-        // 登录处理
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
-        
-            // 修正后的验证方式：使用 find 方法在数组中查找匹配的用户
-            const validUser = validateUser(username, password);
-            
-            if (validUser) {
-                // 登录成功
-                document.getElementById('loginPage').classList.add('hidden');
-                document.getElementById('mainPage').classList.remove('hidden');
-                document.getElementById('currentUser').textContent = username;
-                errorDiv.classList.add('hidden');
+
+        // 开始新会话
+        async function startNewSession() {
+            if (!isConnected) {
+                alert('请先确保服务器连接正常');
+                return;
+            }
+
+            try {
+                const serverUrl = document.getElementById('server-url').value;
+                const response = await fetch(`${serverUrl}/new_session`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentSessionId = data.session_id;
+
+                    // 更新UI显示
+                    updateSessionStatus();
+
+                    // 清空聊天区域
+                    const chatMessages = document.getElementById('chat-messages');
+                    chatMessages.innerHTML = '';
+
+                    // 添加欢迎消息
+                    addMessage('新会话已开始！我现在可以记住我们的对话内容了。', 'ai');
+
+                    contextLength = 0;
+                } else {
+                    alert('创建新会话失败');
+                }
+            } catch (error) {
+                alert(`创建新会话失败: ${error.message}`);
+            }
+        }
+
+        // 清空当前会话
+        async function clearCurrentSession() {
+            if (!currentSessionId) {
+                alert('没有活跃的会话');
+                return;
+            }
+
+            if (!confirm('确定要清空当前会话的历史记录吗？')) {
+                return;
+            }
+
+            try {
+                const serverUrl = document.getElementById('server-url').value;
+                const response = await fetch(`${serverUrl}/clear_session`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ session_id: currentSessionId })
+                });
+
+                if (response.ok) {
+                    // 清空聊天区域
+                    const chatMessages = document.getElementById('chat-messages');
+                    chatMessages.innerHTML = '';
+
+                    // 添加提示消息
+                    addMessage('会话历史已清空，我们可以重新开始对话。', 'ai');
+
+                    contextLength = 0;
+                    updateContextInfo();
+                } else {
+                    alert('清空会话失败');
+                }
+            } catch (error) {
+                alert(`清空会话失败: ${error.message}`);
+            }
+        }
+
+        // 显示会话历史
+        async function showSessionHistory() {
+            if (!currentSessionId) {
+                alert('没有活跃的会话');
+                return;
+            }
+
+            try {
+                const serverUrl = document.getElementById('server-url').value;
+                const response = await fetch(`${serverUrl}/get_history`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ session_id: currentSessionId })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayHistoryModal(data.messages);
+                } else {
+                    alert('获取历史记录失败');
+                }
+            } catch (error) {
+                alert(`获取历史记录失败: ${error.message}`);
+            }
+        }
+
+        // 显示历史记录模态框
+        function displayHistoryModal(messages) {
+            const modal = document.getElementById('history-modal');
+            const content = document.getElementById('history-content');
+
+            content.innerHTML = '';
+
+            if (messages.length === 0) {
+                content.innerHTML = '<p class="text-gray-500">暂无历史记录</p>';
             } else {
-                // 登录失败
-                errorDiv.classList.remove('hidden');
-                document.getElementById('password').value = '';
+                messages.forEach((msg, index) => {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = `p-2 rounded ${msg.role === 'user' ? 'bg-gray-100' : 'bg-blue-50'}`;
+                    msgDiv.innerHTML = `
+                        <strong>${msg.role === 'user' ? '用户' : 'AI'}:</strong>
+                        <span class="text-gray-700">${escapeHtml(msg.content.substring(0, 100))}${msg.content.length > 100 ? '...' : ''}</span>
+                    `;
+                    content.appendChild(msgDiv);
+                });
             }
-        });
 
-        // 退出登录
-        function logout() {
-            document.getElementById('mainPage').classList.add('hidden');
-            document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('loginError').classList.add('hidden');
-            
-            // 清空对话历史
-            chatHistory = [];
-            const chatContainer = document.getElementById('chatHistory');
-            chatContainer.innerHTML = `
-                <div class="text-center text-gray-400 my-8">
-                    <i class="fas fa-comments text-3xl mb-3 opacity-60"></i>
-                    <p class="text-lg">开始您的对话</p>
-                    <p class="text-sm mt-2">我可以帮助您解决风电相关的问题</p>
-                </div>
-            `;
+            modal.classList.remove('hidden');
         }
 
-        // 快捷问题
-        function quickQuestion(question) {
-            document.getElementById('messageInput').value = question;
-            sendMessage();
+        // 关闭历史记录模态框
+        function closeHistoryModal() {
+            document.getElementById('history-modal').classList.add('hidden');
         }
 
-        // 添加消息到聊天
-        function addMessageToChat(content, isUser) {
-            const chatContainer = document.getElementById('chatHistory');
-            
-            // 移除初始提示
-            const initialPrompt = chatContainer.querySelector('.text-center');
-            if (initialPrompt) {
-                initialPrompt.remove();
-            }
+        // 导出对话
+        function exportChat() {
+            const messages = document.querySelectorAll('#chat-messages .message-bubble');
+            let chatText = `风起大模型对话记录\n生成时间: ${new Date().toLocaleString()}\n${'='.repeat(50)}\n\n`;
 
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
-            
-            if (isUser) {
-                messageDiv.textContent = content;
-            } else {
-                messageDiv.innerHTML = marked.parse(content);
-            }
-
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            chatHistory.push({
-                role: isUser ? 'user' : 'assistant',
-                content: content
+            messages.forEach((msg) => {
+                const isUser = msg.classList.contains('flex-row-reverse');
+                const text = msg.querySelector('p').textContent;
+                chatText += `${isUser ? '用户' : 'AI'}: ${text}\n\n`;
             });
+
+            // 创建下载链接
+            const blob = new Blob([chatText], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fqsy-chat-${new Date().toISOString().slice(0, 10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 更新会话状态显示
+        function updateSessionStatus() {
+            const sessionStatus = document.getElementById('session-status');
+            if (currentSessionId) {
+                sessionStatus.textContent = currentSessionId.substring(0, 8) + '...';
+                sessionStatus.className = 'text-sm font-mono text-green-600';
+            } else {
+                sessionStatus.textContent = '对话中';
+                sessionStatus.className = 'text-sm font-mono text-gray-400';
+            }
+        }
+
+        // 更新上下文信息
+        function updateContextInfo() {
+            const contextInfo = document.getElementById('context-info');
+            if (contextLength > 0) {
+                contextInfo.textContent = `对话轮次: ${Math.floor(contextLength / 2)}`;
+            }
+        }
+
+        // 处理键盘事件
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
         }
 
         // 发送消息
         async function sendMessage() {
-            const messageInput = document.getElementById('messageInput');
-            const sendButton = document.getElementById('sendButton');
-            const userMessage = messageInput.value.trim();
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
 
-            if (!userMessage) return;
+            if (!message) return;
+            if (!isConnected) {
+                alert('请先确保服务器连接正常');
+                return;
+            }
 
-            // 禁用按钮
-            sendButton.disabled = true;
-            sendButton.innerHTML = '<div class="loading mr-2"></div>发送中';
-
-            // 添加用户消息
-            addMessageToChat(userMessage, true);
+            // 清空输入框
             messageInput.value = '';
 
-            // 添加AI思考状态
-            const tempMessage = document.createElement('div');
-            tempMessage.className = 'message ai-message';
-            tempMessage.innerHTML = '<div class="flex items-center"><div class="loading mr-2"></div><span>AI正在思考...</span></div>';
-            document.getElementById('chatHistory').appendChild(tempMessage);
+            // 添加用户消息到聊天区域
+            addMessage(message, 'user');
 
-            // API配置
-            const apiUrl = 'https://78e7ceeb.r16.cpolar.top/v1/chat-messages';
-            const apiKey = 'app-TOJJ8tsfcEOpPP7Dvr1UKsM5';
-
-            const data = {
-                inputs: {},
-                query: userMessage,
-                user: "hantech",
-                response_mode: "streaming",
-                conversation_id: "",
-                messages: chatHistory.slice(-10)
-            };
+            // 显示AI正在输入的提示
+            showTypingIndicator();
 
             try {
-                const response = await fetch(apiUrl, {
+                const serverUrl = document.getElementById('server-url').value;
+                const requestBody = {
+                    message: message,
+                    session_id: currentSessionId
+                };
+
+                const response = await fetch(`${serverUrl}/chat`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(requestBody)
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (response.ok) {
+                    const data = await response.json();
 
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder();
-
-                // 移除临时消息
-                tempMessage.remove();
-
-                let responseText = '';
-
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-
-                    const chunk = decoder.decode(value, { stream: true });
-                    const lines = chunk.split('\n').filter(line => line.trim() !== '');
-
-                    for (const line of lines) {
-                        if (line.startsWith('data: ')) {
-                            const jsonStr = line.substring(6);
-                            if (jsonStr === '[DONE]') continue;
-
-                            try {
-                                const jsonData = JSON.parse(jsonStr);
-                                if (jsonData.answer) {
-                                    if (responseText === '') {
-                                        responseText = jsonData.answer;
-                                        addMessageToChat(responseText, false);
-                                    } else {
-                                        responseText += jsonData.answer;
-                                        const messages = document.querySelectorAll('.ai-message');
-                                        const lastMessage = messages[messages.length - 1];
-                                        if (lastMessage) {
-                                            lastMessage.innerHTML = marked.parse(responseText);
-                                        }
-                                        chatHistory[chatHistory.length - 1].content = responseText;
-                                    }
-                                }
-                            } catch (e) {
-                                console.error('解析数据出错:', e);
-                            }
-                        }
+                    // 更新会话ID（可能是新会话）
+                    if (!currentSessionId) {
+                        currentSessionId = data.session_id;
+                        updateSessionStatus();
                     }
-                }
 
+                    // 更新上下文长度
+                    if (data.context_length) {
+                        contextLength = data.context_length;
+                        updateContextInfo();
+                    }
+
+                    hideTypingIndicator();
+                    addMessage(data.response, 'ai');
+                } else {
+                    const errorData = await response.json();
+                    hideTypingIndicator();
+                    addMessage(`错误: ${errorData.error || '服务器响应异常'}`, 'error');
+                }
             } catch (error) {
-                console.error('Error:', error);
-                tempMessage.remove();
-                addMessageToChat(`**错误:** ${error.message || '发生未知错误，请稍后重试。'}`, false);
-            } finally {
-                // 恢复按钮状态
-                sendButton.disabled = false;
-                sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>发送';
+                hideTypingIndicator();
+                addMessage(`连接错误: ${error.message}`, 'error');
             }
         }
 
-        // 回车键发送
-        document.getElementById('messageInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
+        // 添加消息到聊天区域
+        function addMessage(message, type) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message-bubble flex items-start space-x-3';
+
+            if (type === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center text-white font-bold text-sm">你</div>
+                    <div class="bg-gray-100 rounded-lg p-3 max-w-md ml-auto">
+                        <p class="text-gray-800">${escapeHtml(message)}</p>
+                    </div>
+                `;
+                messageDiv.className += ' flex-row-reverse';
+            } else if (type === 'ai') {
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">AI</div>
+                    <div class="bg-blue-50 rounded-lg p-3 max-w-md">
+                        <p class="text-gray-800">${escapeHtml(message)}</p>
+                    </div>
+                `;
+            } else if (type === 'error') {
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-sm">!</div>
+                    <div class="bg-red-50 rounded-lg p-3 max-w-md">
+                        <p class="text-red-800">${escapeHtml(message)}</p>
+                    </div>
+                `;
+            }
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 显示AI正在输入的提示
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chat-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'message-bubble flex items-start space-x-3';
+            typingDiv.innerHTML = `
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">AI</div>
+                <div class="bg-blue-50 rounded-lg p-3">
+                    <div class="typing-indicator flex space-x-1">
+                        <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                        <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                        <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 隐藏AI正在输入的提示
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // HTML转义函数
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 点击模态框外部关闭
+        document.getElementById('history-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeHistoryModal();
             }
         });
     </script>
